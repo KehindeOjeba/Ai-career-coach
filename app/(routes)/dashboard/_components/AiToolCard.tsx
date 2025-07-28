@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import ResumeUploadModal from './ResumeUploadModal';
 import { useState } from 'react';
+import RoadmapGeneratorModal from './RoadmapGeneratorModal';
 
 export interface TOOL {
     name: string,
@@ -24,14 +25,23 @@ const AiToolCard = ({tool}: AIToolProps) => {
   const {user} = useUser();
   const id = uuidv4();
 const router = useRouter()
-const [openResumeUpload, setOpenResumeUpload] = useState(false)
+const [openResumeUpload, setOpenResumeUpload] = useState(false);
+const [openRoadmapModal, setOpenRoadmapModal] = useState(false)
 
 const onClickButton = async() => {
+  //open resume analyzer
   if (tool.name == 'AI Resume Analyzer')
   {
     setOpenResumeUpload(true)
     return;
   }
+//opens roadmap generator 
+if (tool.path == '/ai-tools/ai-roadmap-agent')
+{
+  setOpenRoadmapModal(true)
+  return;
+}
+
 //Create New record to History Table in the db
 const result = await axios.post('/api/history',{
   recordId: id,
@@ -51,6 +61,7 @@ router.push(tool.path+'/'+id)
         <Button onClick={onClickButton}>{tool.button}</Button>
         {/* </Link> */}
         <ResumeUploadModal openResumeUpload={openResumeUpload} setOpenResumeModal={setOpenResumeUpload}/>
+        <RoadmapGeneratorModal openRoadmapModal={openRoadmapModal} setOpenRoadmapModal={() => setOpenRoadmapModal(false)}/>
     </div>
   )
 }

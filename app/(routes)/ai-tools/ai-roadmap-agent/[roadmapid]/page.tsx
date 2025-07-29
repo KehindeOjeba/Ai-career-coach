@@ -30,7 +30,8 @@ const RoadmapGeneratorAgent = () => {
         <Button className="w-full mt-5">+ Create Another Roadmap</Button>
       </div>
       <div className="md:grid-cols-2">
-        roadmap image
+        roadmap 
+        
       </div>
     </div>
   )

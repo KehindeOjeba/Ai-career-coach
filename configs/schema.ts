@@ -15,5 +15,5 @@ export const HistoryTable = pgTable('historyTable', {
     createdAt: varchar(),
     aiAgentType: varchar(),
     metaData: varchar(),
-
+    
 })

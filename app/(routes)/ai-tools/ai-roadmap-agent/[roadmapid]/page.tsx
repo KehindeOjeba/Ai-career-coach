@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react"
+import RoadmapCanva from "../_components/RoadmapCanva";
+import RoadmapGeneratorModal from "@/app/(routes)/dashboard/_components/RoadmapGeneratorModal";
 
 const RoadmapGeneratorAgent = () => {
   const {roadmapid} = useParams()
   const [roadmapDetails, setRoadmapDetails] = useState<any>();
+const [openRoadmapModal, setOpenRoadmapModal] = useState(false)
 
   useEffect(() => {
     roadmapid && GetRoadmapDetails()
@@ -29,9 +32,12 @@ const RoadmapGeneratorAgent = () => {
 
         <Button className="w-full mt-5">+ Create Another Roadmap</Button>
       </div>
-      <div className="md:grid-cols-2">
-        roadmap image
+      <div className="md:col-span-2 w-full h-[80vh]">
+    {roadmapDetails &&   <RoadmapCanva 
+      initialNodes={roadmapDetails?.initialNodes} initialEdges={roadmapDetails?.initialEdges}
+       />}
       </div>
+       <RoadmapGeneratorModal openRoadmapModal={openRoadmapModal} setOpenRoadmapModal={() => setOpenRoadmapModal(false)}/>
     </div>
   )
 }

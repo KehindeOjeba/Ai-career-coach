@@ -32,11 +32,7 @@ const [openRoadmapModal, setOpenRoadmapModal] = useState(false)
 
         <Button className="w-full mt-5">+ Create Another Roadmap</Button>
       </div>
-      <div className="md:col-span-2 w-full h-[80vh]">
-    {roadmapDetails &&   <RoadmapCanva 
-      initialNodes={roadmapDetails?.initialNodes} initialEdges={roadmapDetails?.initialEdges}
-       />}
-      </div>
+
        <RoadmapGeneratorModal openRoadmapModal={openRoadmapModal} setOpenRoadmapModal={() => setOpenRoadmapModal(false)}/>
     </div>
   )

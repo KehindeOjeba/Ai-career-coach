@@ -5,19 +5,23 @@ import Image from "next/image";
 import path from "path";
 import React from "react";
 import { useState, useEffect } from "react";
-import { aiToolsList } from "./AiTools";
+import { aiToolsList } from "./AiToolsList";
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const History = () => {
   const [userHistory, setUserHistory] = useState([]);
-
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     GetHistory();
   },[]);
 
   const GetHistory = async () => {
+    setLoading(true)
     const result = await axios.get("/api/history");
-    console.log(result?.data);
-    setUserHistory(result?.data);
+    console.log(result.data);
+   setUserHistory(result?.data);
+   setLoading(false)
   };
   console.log(userHistory,'history')
 const GetAgentName = (path: string) => {
@@ -29,7 +33,16 @@ const GetAgentName = (path: string) => {
       <h2 className="font-bold text-lg">Previous History</h2>
       <p>What you previously work on, you can find here</p>
 
-      {userHistory?.length == 0 ? 
+    {loading && 
+    <div>
+      {[1, 2, 3, 4, 5].map((item, index) => (
+        <div key={index}>
+          <Skeleton className="h-[50px] m-4 w-full rounded-md" />
+        </div>
+      ))}
+      </div>}
+
+      {userHistory?.length == 0 && !loading ? 
         <div className="flex items-center justify-center mt-5 flex-col">
           <Image alt="bulb" src={"/bulb.png"} width={50} height={50} />
           <h2>You do not have any history</h2>
@@ -37,9 +50,14 @@ const GetAgentName = (path: string) => {
         </div>
         : <div>
           {userHistory?.map((history: any, index: number) => (
-            <div key={index}>
+            <Link key={index} href={history?.aiAgentType + '/' + history?.recordId} className="flex justify-between items-center my-3 border p-3 rounded-lg">
+            <div  className="flex gap-5">
+              {/* @ts-ignore */}
+              <Image src={GetAgentName(history?.aiAgentType)?.icon} alt="image" width={20} height={20}/>
                 <h2>{GetAgentName(history?.aiAgentType)?.name}</h2>
             </div>
+            <h2>{history?.createdAt}</h2>
+            </Link>
           ))}
         </div>
       }

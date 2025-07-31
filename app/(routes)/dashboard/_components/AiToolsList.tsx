@@ -31,7 +31,7 @@ export const aiToolsList = [
     path: "/create-letter-generator",
   },
 ];
-const AiTools = () => {
+const AiToolsList = () => {
   return (
     <div className="mt-7 p-5 bg-white border rounded-xl">
       <h2 className="font-bold text-lg">Available AI Tools</h2>
@@ -46,4 +46,4 @@ const AiTools = () => {
   );
 };
 
-export default AiTools;
+export default AiToolsList;

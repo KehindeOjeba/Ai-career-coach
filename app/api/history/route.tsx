@@ -38,21 +38,24 @@ NextResponse.json(error)
 }
 
 export async function GET(request:any) {
-    const user = await currentUser();
+  
     const { searchParams } = new URL(request.url);
-    const recordId = searchParams.get('recordId')
+    const recordId = searchParams.get('recordId');
+      const user = await currentUser();
+
    try {
     if (recordId) {
         const result = await db.select().from(HistoryTable).where(eq(HistoryTable.recordId, recordId));
       return NextResponse.json(result[0])  
     }
     else{
-           const result = await db.select().from(HistoryTable).where(eq(HistoryTable.userEmail, user?.primaryEmailAddress))
-           .orderBy(desc(HistoryTable.id) )
+           const result = await db.select().from(HistoryTable).where(eq(HistoryTable.userEmail, user?.primaryEmailAddress?.emailAddress))
+           .orderBy(desc(HistoryTable.id))
       return NextResponse.json(result)  
     }
+       return NextResponse.json({})
     }
-   // return NextResponse.json({})
+
    
    catch(error){
     return NextResponse.json(error)

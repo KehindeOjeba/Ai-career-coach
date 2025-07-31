@@ -2,7 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/configs/db";
 import { HistoryTable } from "@/configs/schema";
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { err } from "inngest/types";
 export async function POST(req:any) {
    const {content, recordId, aiAgentType} = await req.json();
@@ -38,15 +38,25 @@ NextResponse.json(error)
 }
 
 export async function GET(request:any) {
+  
     const { searchParams } = new URL(request.url);
-    const recordId = searchParams.get('recordId')
+    const recordId = searchParams.get('recordId');
+      const user = await currentUser();
+
    try {
     if (recordId) {
         const result = await db.select().from(HistoryTable).where(eq(HistoryTable.recordId, recordId));
       return NextResponse.json(result[0])  
     }
-    return NextResponse.json({})
-   } 
+    else{
+           const result = await db.select().from(HistoryTable).where(eq(HistoryTable.userEmail, user?.primaryEmailAddress?.emailAddress))
+           .orderBy(desc(HistoryTable.id))
+      return NextResponse.json(result)  
+    }
+       return NextResponse.json({})
+    }
+
+   
    catch(error){
     return NextResponse.json(error)
    }

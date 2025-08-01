@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { Loader2Icon, SparkleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,10 +23,24 @@ const RoadmapGeneratorModal = ({
   const [userInput, setUserInput] = useState<string>();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const {has} = useAuth();
+
   const GenerateRoadmap = async () => {
     const roadmapId = v4();
     setLoading(true);
     try {
+      //route to billing 
+      //@ts-ignore
+      const hasSubsriptionEnabled = await has({ plan: 'pro'})
+if(!hasSubsriptionEnabled) {
+   const resultHistory = await axios.get('/api/history');
+   const historyList = resultHistory.data;
+   const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-roadmap-agent')
+   router.push('/billing')
+   if (isPresent) {
+    return null
+   }
+}
       const result = await axios.post("/api/ai-roadmap-agent", {
         roadmapId: roadmapId,
         userInput: userInput,

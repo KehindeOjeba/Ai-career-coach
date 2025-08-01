@@ -13,10 +13,13 @@ import { Button } from '@/components/ui/button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 const ResumeUploadModal = ({openResumeUpload, setOpenResumeModal}: any) => {
     const [file, setFile] = useState<any>();
     const [loading, setLoading] = useState(false)
-    const router = useRouter()
+    const router = useRouter();
+    const { has } = useAuth()
+
 const onFileChange = (event:any) => {
     const file = event.target.files?.[0];
     if (file){
@@ -31,7 +34,19 @@ const onUploadAndAnalyze = async () => {
  const formData = new FormData();
  formData.append('recordId', recordId);
  formData.append('resumeFile', file);
- 
+ //route to billing
+ //@ts-ignore
+const hasSubsriptionEnabled = await has({ plan: 'pro'})
+if(!hasSubsriptionEnabled) {
+   const resultHistory = await axios.get('/api/history');
+   const historyList = resultHistory.data;
+   const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-resume-analyzer')
+   router.push('/billing')
+   if (isPresent) {
+    return null
+   }
+}
+
 //Send FormData to backend server
 const result = await axios.post('/api/ai-resume-agent', formData)
 console.log(result.data)
@@ -43,7 +58,7 @@ setOpenResumeModal(false);
    <Dialog open={openResumeUpload} onOpenChange={setOpenResumeModal}>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Upload resume pdf file</DialogTitle>
+      <DialogTitle>Upload resume PDF file</DialogTitle>
       <DialogDescription>
        <div>
         <label htmlFor='resumeUpload' className='flex items-center flex-col justify-center p-7 border border-dashed rounded-xl hover:bg-slate-100 cursor-pointer'> 

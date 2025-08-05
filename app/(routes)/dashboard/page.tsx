@@ -6,6 +6,7 @@ function Dashboard() {
     return (
         <div>
             <WelcomeBanner/>
+            <br/>
             <AiTools/>
            <History/>
         </div>

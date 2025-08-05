@@ -51,7 +51,7 @@ export function AppSidebar() {
                 <div className='p-4'>
                    <Image src={'./logo.svg'} alt='logo' width={100} height={100}
                         className='w-full h-full' />
-                    <h2 className='text-sm text-gray-400 text-center mt-3'>...Redefining Skills</h2>
+                    <h2 className='text-sm text-gray-400 text-center mt-3'>..Redefining Skills</h2>
                 </div>
             </SidebarHeader>
             <SidebarContent>

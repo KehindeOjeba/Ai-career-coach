@@ -203,7 +203,7 @@ duration:'',
 initialNodes : [
 {
  id: '1',
- type: 'default',
+ type: 'turbo',
  position: { x: 0, y: 0 },
  data: {
 title: 'Step Title',

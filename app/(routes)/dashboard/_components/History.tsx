@@ -16,6 +16,7 @@ const History = () => {
     GetHistory();
   },[]);
 
+  
   const GetHistory = async () => {
     setLoading(true)
     const result = await axios.get("/api/history");

@@ -14,6 +14,7 @@ import {
 import { Calendar, Home, Inbox, Layers, Search, Settings, UserCircle, Wallet } from "lucide-react"
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import Logo from '@/public/ResumeLogo.jpg'
 
 const items = [
     {
@@ -49,8 +50,9 @@ export function AppSidebar() {
         <Sidebar>
             <SidebarHeader>
                 <div className='p-4'>
-                   <Image src={'./logo.svg'} alt='logo' width={100} height={100}
-                        className='w-full h-full' />
+                   <Image src={Logo} alt='logo' width={200} height={200}
+                        className='w-full h-[70%]'
+                         />
                     <h2 className='text-sm text-gray-400 text-center mt-3'>..Redefining Skills</h2>
                 </div>
             </SidebarHeader>
@@ -74,9 +76,9 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>
+            {/* <SidebarFooter>
                 <h2 className='p-2 text-gray-400 text-sm'>Copyright @Tubeguruji</h2>
-            </SidebarFooter>
+            </SidebarFooter> */}
         </Sidebar>
     )
 }

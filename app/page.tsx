@@ -229,7 +229,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="bg-slate-900 text-white pt-32 pb-20">
+      <section className="bg-gradient-to-r from-[#3d2d07] via-[#1dbfec] to-[#11221b] text-white pt-32 pb-20">
         <div className="container mx-auto px-6 text-center">
           <motion.h2
             className="text-4xl md:text-5xl font-bold mb-4"

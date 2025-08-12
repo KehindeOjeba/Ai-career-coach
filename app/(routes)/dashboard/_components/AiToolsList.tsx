@@ -23,13 +23,7 @@ export const aiToolsList = [
     button: "Generate Now",
     path: "/ai-tools/ai-roadmap-agent",
   },
-  {
-    name: "Cover Letter Generator",
-    desc: "Write a cover letter",
-    icon: "/cover.jpg",
-    button: "Create Now",
-    path: "/create-letter-generator",
-  },
+
 ];
 const AiToolsList = () => {
   return (
@@ -37,7 +31,7 @@ const AiToolsList = () => {
       <h2 className="font-bold text-lg">Available AI Tools</h2>
       <p>Start Building and Shape Your Career with exclusive AI Tools that we have</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 mt-4">
         {aiToolsList.map((tool, index) => (
           <AiToolCard tool={tool} key={index} />
         ))}

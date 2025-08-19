@@ -124,7 +124,7 @@ router.replace('/ai-tools/ai-chat/'+id)
             </div>
           ))}
         </div>
-        <div className="flex justify-between items-center gap-6 absolute bottom-5 w-[50%]">
+        <div className="flex justify-between items-center gap-6 absolute bottom-5 w-[60%] ">
           {/* Input field */}
           <Input
             placeholder="Type here"

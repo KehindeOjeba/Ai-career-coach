@@ -70,7 +70,7 @@ if(!hasSubsriptionEnabled) {
         <DialogFooter>
           <Button variant={"outline"}>Cancel</Button>
           <Button onClick={GenerateRoadmap} disabled={loading || !userInput}>
-          {loading? <Loader2Icon className="animate-spin"/>:  <SparkleIcon />} 
+          {loading? <Loader2Icon className="animate-spin"/>  :  <SparkleIcon />} 
             Generate
           </Button>
         </DialogFooter>

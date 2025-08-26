@@ -31,10 +31,8 @@ const GetAgentName = (path: string) => {
 }
   return (
     <div className="mt-5 p-5 border rounded-xl">
-      {/* <h2 className="font-bold text-lg">Previous History</h2>
-      <p>What you previously work on, you can find here</p> */}
-      <p>Another history heading. </p>
-      <p>Looking for something that would  work better. </p>
+      <h2 className="font-bold text-lg">Previous History</h2>
+      <p>What you previously work on, you can find here</p>
 
     {loading && 
     <div>

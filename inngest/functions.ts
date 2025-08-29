@@ -195,6 +195,7 @@ export const AiRoadmapGeneratorAgent = createAgent({
 - Each node must have a title, short description, and learning resource link
 - Use unique IDs for all nodes and edges
 - Node type MUST always be exactly "turbo". Do NOT use "input", "default", or "output" 
+- make it more spacious node position and scrollable,
 - Response n JSON format
 {
 roadmapTitle:'',

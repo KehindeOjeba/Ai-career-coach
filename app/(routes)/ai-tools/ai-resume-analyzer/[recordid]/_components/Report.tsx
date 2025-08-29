@@ -177,7 +177,7 @@ const Report = ({ aiReport }: any) => {
         <ol className="list-none space-y-4">
           {aiReport?.tips_for_improvement.map((item: any, index: number) => (
             <li key={index} className="flex items-start gap-4">
-              <span className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center font-bold mr-3"></span>
+              <span className="w-5 h-4 rounded-full bg-blue-600 flex items-center justify-center font-bold "></span>
               <p className="text-sm text-gray-600">{item}</p>
             </li>
           ))}

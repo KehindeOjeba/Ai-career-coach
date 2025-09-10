@@ -189,13 +189,18 @@ export const AiRoadmapGeneratorAgent = createAgent({
   system: `Generate a React flow tree-structured learning roadmap for user input position/ skills the following format:
  vertical tree structure with meaningful x/y positions to form a flow
 
+ - Layout must be a **vertical tree layout**:
+  • The root node is at the top (x: 0, y: 0).
+  • Each next level must be placed directly below the parent (increase y by 200 each level).
+  • Sibling nodes must be horizontally aligned (spread x by at least 300).
+- All connecting edges must form straight vertical or horizontal lines (never diagonal).
 - Structure should be similar to roadmap.sh layout
 - Steps should be ordered from fundamentals to advanced
 - Include branching for different specializations (if applicable)
 - Each node must have a title, short description, and learning resource link
 - Use unique IDs for all nodes and edges
 - Node type MUST always be exactly "turbo". Do NOT use "input", "default", or "output" 
-- make it more spacious node position and scrollable,
+- make the node position more spacious
 - Response n JSON format
 {
 roadmapTitle:'',

@@ -4,7 +4,7 @@ import React from 'react'
 
 const TurboNode = ({data}: any) => {
   return (
-    <div className='rounded-lg border border-gray-300 bg-yellow-100 shadow-md w-64 p-5'>
+    <div className='rounded-lg border border-gray-300 bg-yellow-100 shadow-md w-64 p-5 m-5'>
         <div className='font-bold text-lg text-gray-800'>{data.title}</div>
         <p className='text-sm text-gray-600 mt-1 line-clamp-2'>{data.description}</p>
         <Link href={data?.link} target='_blank' className='text-blue-500 underline text-sm mt-2 inline-block '>

@@ -1,5 +1,5 @@
 "use client"
-import Logo from '../public/ResumeLogo.jpg'
+import Logo from '../public/logo1.png'
 
 import Image from "next/image";
 import { motion} from 'framer-motion'
@@ -206,10 +206,9 @@ export default function Home() {
     <div className="bg-slate-50 text-slate-900">
       {/* Navbar */}
       <header className="bg-white shadow fixed w-full z-50">
-        <div className="container mx-auto flex items-center justify-between py-4 px-6">
+        <div className="container mx-auto flex items-center justify-between px-7">
          <div>
-              <Image src={Logo} alt="logo" width={60} height={60} />
-              <span> AI - CCA</span>
+              <Image src={Logo} alt="logo" width={100} height={100} priority/>
            </div>
          <div>   {/* Clerk Authentication  */}
                {!user ? <SignInButton mode='modal'>
@@ -229,7 +228,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="bg-gradient-to-r from-[#3d2d07] via-[#1dbfec] to-[#11221b] text-white pt-32 pb-20">
+      <section className="bg-gradient-to-r from-[#3d2d07] via-[#1dbfec] to-[#11221b] text-white pt-52 pb-20">
         <div className="container mx-auto px-6 text-center">
           <motion.h2
             className="text-4xl md:text-5xl font-bold mb-4"

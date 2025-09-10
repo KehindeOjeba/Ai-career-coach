@@ -22,9 +22,10 @@ const RoadmapCanva = (
         nodes={initialNodes}
         edges={initialEdges}
         nodeTypes={nodeTypes}
+        //fitView
     >
         <Controls/>
-        <MiniMap/>
+        {/* <MiniMap/> */}
         {/* @ts-ignore */}
         <Background variant='dots' gap={12} size={1}/>
     </ReactFlow>

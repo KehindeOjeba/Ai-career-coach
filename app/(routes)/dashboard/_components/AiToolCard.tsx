@@ -58,7 +58,7 @@ router.push(tool.path+'/'+id)
         <h2 className='font-bold mt-2'>{tool.name}</h2>
         <p className='text-gray-400'>{tool.desc}</p>
         {/* <Link href={tool.path+'/'+id}> */}
-        <Button onClick={onClickButton}>{tool.button}</Button>
+        <Button onClick={onClickButton} className='bg-red-500'>{tool.button}</Button>
         {/* </Link> */}
         <ResumeUploadModal openResumeUpload={openResumeUpload} setOpenResumeModal={setOpenResumeUpload}/>
         <RoadmapGeneratorModal openRoadmapModal={openRoadmapModal} setOpenRoadmapModal={() => setOpenRoadmapModal(false)}/>

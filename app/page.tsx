@@ -228,7 +228,8 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="bg-gradient-to-r from-[#3d2d07] via-[#1dbfec] to-[#11221b] text-white pt-52 pb-20">
+      <section className="bg-[#4c4d5b] text-white pt-52 pb-20">
+      {/* <section className="bg-gradient-to-r from-[#fa957f] via-[#1dbfec] to-[#11221b] text-white pt-52 pb-20"> */}
         <div className="container mx-auto px-6 text-center">
           <motion.h2
             className="text-4xl md:text-5xl font-bold mb-4"
@@ -250,7 +251,7 @@ export default function Home() {
 
           <motion.a
             href="/dashboard"
-            className="inline-block bg-orange-600 px-6 py-3 rounded-lg text-lg font-medium hover:bg-orange-700"
+            className="inline-block bg-red-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-orange-700"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -274,7 +275,7 @@ export default function Home() {
             ].map((feature, idx) => (
               <motion.div
                 key={idx}
-                className="bg-slate-50 p-6 rounded-xl shadow hover:shadow-lg transition border border-orange-500"
+                className="bg-slate-50 p-6 rounded-xl shadow hover:shadow-lg transition border border-red-500"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -292,7 +293,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-300 py-8">
         <div className="container mx-auto px-6 flex justify-between">
-          <p>© {new Date().getFullYear()} AI Career Chat Agent. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} AI Career Agent. All rights reserved.</p>
         </div>
       </footer>
     </div>

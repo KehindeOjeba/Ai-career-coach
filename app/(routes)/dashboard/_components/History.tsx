@@ -64,10 +64,11 @@ const History = () => {
                     src={GetAgentName(history?.aiAgentType)?.icon as string}
                     alt="image"
                     width={20}
-                    height={20}
+                    height={10}
+                    className="bg-black hidden"
                   />
                 ) : null}
-                <h2>{GetAgentName(history?.aiAgentType)?.name}</h2>
+                <h2 className="font-bold">{GetAgentName(history?.aiAgentType)?.name}</h2>
               </div>
               <h2>{history?.createdAt}</h2>
             </Link>

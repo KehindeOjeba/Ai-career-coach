@@ -1,11 +1,12 @@
 import React from "react";
 import AiToolCard from "./AiToolCard";
+import { Briefcase, FileText, UserCheck, Compass, BarChart, Lightbulb } from "lucide-react";
 
 export const aiToolsList = [
   {
     name: "AI Career Q&A Chat",
     desc: "Chat with AI Agent",
-    icon: "/chatbot.jpg",
+     icon: "/chatbot.jpg",
     button: "Lets Chat",
     path: "/ai-tools/ai-chat",
   },

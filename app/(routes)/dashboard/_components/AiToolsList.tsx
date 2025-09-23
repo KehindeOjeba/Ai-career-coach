@@ -28,7 +28,7 @@ export const aiToolsList = [
 ];
 const AiToolsList = () => {
   return (
-    <div className="mt-7 p-5 bg-white border rounded-xl">
+    <div className="p-5 bg-white border rounded-xl">
       <h2 className="font-bold text-lg">AI Career Tools</h2>
       <p>Explore and Start Building. Shape Your Career with exclusive AI Tools.</p>
 

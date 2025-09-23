@@ -37,7 +37,7 @@ const History = () => {
         <div>
           {[1, 2, 3, 4, 5].map((item, index) => (
             <div key={index}>
-              <Skeleton className="h-[50px] m-4 w-full rounded-md" />
+              <Skeleton className="h-[50px] m-4 w-[95%] rounded-md" />
             </div>
           ))}
         </div>

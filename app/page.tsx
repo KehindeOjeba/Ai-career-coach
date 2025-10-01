@@ -246,8 +246,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Get instant, personalized career advice, resume feedback, and interview preparation from your 
-            {/* AI assistant. */}
+            Get instant, personalized career advice, resume feedback, and interview preparation from your AI assistant.
           </motion.p>
 
           <motion.a
@@ -294,9 +293,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-300 py-8">
         <div className="container mx-auto px-6 flex justify-between">
-          <p>© {new Date().getFullYear()} AI Career Agent. 
-            {/* All rights reserved. */}
-            </p>
+          <p>© {new Date().getFullYear()} AI Career Agent. All rights reserved.</p>
         </div>
       </footer>
     </div>

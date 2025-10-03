@@ -29,14 +29,14 @@ export const aiToolsList = [
 const AiToolsList = () => {
   return (
     <div className="p-5 bg-white border rounded-xl">
-      {/* <h2 className="font-bold text-lg">AI Career Tools</h2>
+      <h2 className="font-bold text-lg">AI Career Tools</h2>
       <p>Explore and Start Building. Shape Your Career with exclusive AI Tools.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 mt-4">
         {aiToolsList.map((tool, index) => (
           <AiToolCard tool={tool} key={index} />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

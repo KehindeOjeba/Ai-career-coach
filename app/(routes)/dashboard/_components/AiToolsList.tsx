@@ -5,7 +5,7 @@ import { Briefcase, FileText, UserCheck, Compass, BarChart, Lightbulb } from "lu
 export const aiToolsList = [
   {
     name: "AI Career Q&A Chat",
-    desc: "Chat with AI Agent",
+    desc: "Chat your way to better career decisions with AI insights.",
      icon: "/chatbot.jpg",
     button: "Lets Chat",
     path: "/ai-tools/ai-chat",

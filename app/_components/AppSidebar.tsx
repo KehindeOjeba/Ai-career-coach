@@ -11,26 +11,26 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Calendar, Home, Inbox, Layers, Search, Settings, UserCircle, Wallet } from "lucide-react"
+import { Calendar, Home, Inbox, Layers, Search, Settings, UserCircle, Wallet, LayoutDashboard , PenTool, History} from "lucide-react"
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Logo from '@/public/herologo.png'
 
 const items = [
     {
-        title: "Workspace",
+        title: "Dashboard",
         url: "/dashboard",
-        icon: Layers,
+        icon: LayoutDashboard,
     },
     {
         title: "AI Tools",
         url: "/ai-tools",
-        icon: Inbox,
+        icon: PenTool,
     },
     {
         title: "My History",
         url: "/my-history",
-        icon: Calendar,
+        icon: History,
     },
     {
         title: "Billing",

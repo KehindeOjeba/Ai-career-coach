@@ -5,7 +5,7 @@ import History from './_components/History'
 function Dashboard() {
     return (
         <div>
-            <WelcomeBanner/>
+            {/* <WelcomeBanner/> */}
             <br/>
             <AiTools/>
            <History/>

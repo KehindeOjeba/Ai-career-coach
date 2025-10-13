@@ -1,7 +1,10 @@
-import { User } from "firebase/auth";
+"use client";
+
 import { createContext } from "react";
+import { UserResource } from "@clerk/types"; // Clerk provides this user type
+
 interface AuthContextType {
-    user: User | null;
+  user: UserResource | null;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

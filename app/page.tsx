@@ -255,7 +255,8 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Start Free Tria
+            Start Free Trial
+
           </motion.a>
 
       

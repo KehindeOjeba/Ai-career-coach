@@ -5,21 +5,21 @@ import { Briefcase, FileText, UserCheck, Compass, BarChart, Lightbulb } from "lu
 export const aiToolsList = [
   {
     name: "AI Career Q&A Chat",
-    desc: "Chat your way to better career decisions with AI insights.",
+    desc: "Chat your way to better career decisions with AI insights. Go beyond basic advice — get tailored insights on how to position yourself for opportunities, bridge skill gaps, and navigate career transitions with confidence.",
      icon: "/chatbot.jpg",
     button: "Lets Chat",
     path: "/ai-tools/ai-chat",
   },
   {
     name: "AI Resume Analyzer",
-    desc: "Improve your resume",
+    desc: "Improve your resume. Transform the way you present yourself to employers with smart, data-driven feedback from the AI Resume Analyzer. It scans your resume like a hiring manager — identifying strengths, weaknesses, and opportunities for improvement — so you can highlight what truly matters.",
     icon: "/resume.png",
     button: "Analyze Now",
     path: "/ai-tools/ai-resume-analyzer",
   },
   {
     name: "Career Roadmap Generator",
-    desc: "Build your roadmap",
+    desc: "By analyzing your current skills, goals, and industry trends, it builds a personalized roadmap that shows exactly what steps to take next. You’ll discover which roles fit your strengths, what skills to develop, and how to progress strategically toward your dream career.",
     icon: "/roadmap.png",
     button: "Generate Now",
     path: "/ai-tools/ai-roadmap-agent",
@@ -34,7 +34,7 @@ const AiToolsList = () => {
 
       <div 
       //className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 mt-4"
-      className="p-5"
+      className="p-1"
       >
         {aiToolsList.map((tool, index) => (
           <AiToolCard tool={tool} key={index}  />

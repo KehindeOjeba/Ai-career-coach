@@ -53,10 +53,10 @@ router.push(tool.path+'/'+id)
 }
 
   return (
-    <div className='p-5 my-5 bg-gradient-to-r from-[#199bf8] via-[#b8edfc] to-[#2130fd] rounded-xl'>
+    <div className='p-4 my-5 bg-blue-300 rounded-xl'>
         <Image src={tool.icon} width={40} height={30} alt={tool.name} />
         <h2 className='font-bold mt-2'>{tool.name}</h2>
-        <p className='text-gray-400'>{tool.desc}</p>
+        <p className='text-gray-500 mb-5'>{tool.desc}</p>
         {/* <Link href={tool.path+'/'+id}> */}
         <Button onClick={onClickButton} className='bg-red-500'>{tool.button}</Button>
         {/* </Link> */}

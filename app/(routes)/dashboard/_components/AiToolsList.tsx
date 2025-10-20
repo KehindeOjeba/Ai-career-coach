@@ -17,13 +17,13 @@ export const aiToolsList = [
     button: "Analyze Now",
     path: "/ai-tools/ai-resume-analyzer",
   },
-  {
-    name: "Career Roadmap Generator",
-    desc: "By analyzing your current skills, goals, and industry trends, it builds a personalized roadmap that shows exactly what steps to take next. You’ll discover which roles fit your strengths, what skills to develop, and how to progress strategically toward your dream career.",
-    icon: "/roadmap.png",
-    button: "Generate Now",
-    path: "/ai-tools/ai-roadmap-agent",
-  },
+  // {
+  //   name: "Career Roadmap Generator",
+  //   desc: "By analyzing your current skills, goals, and industry trends, it builds a personalized roadmap that shows exactly what steps to take next. You’ll discover which roles fit your strengths, what skills to develop, and how to progress strategically toward your dream career.",
+  //   icon: "/roadmap.png",
+  //   button: "Generate Now",
+  //   path: "/ai-tools/ai-roadmap-agent",
+  // },
 
 ];
 const AiToolsList = () => {

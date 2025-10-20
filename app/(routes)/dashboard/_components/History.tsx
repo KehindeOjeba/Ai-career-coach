@@ -47,7 +47,7 @@ const History = () => {
         <div className="flex items-center justify-center mt-5 flex-col">
           <Image alt="bulb" src={"/bulb.png"} width={50} height={50} />
           <h2>You do not have any history</h2>
-          <Button className="mt-5">Explore AI Tools</Button>
+          <div>Start a conversation with AI Tools</div>
         </div>
       ) : (
         <div>

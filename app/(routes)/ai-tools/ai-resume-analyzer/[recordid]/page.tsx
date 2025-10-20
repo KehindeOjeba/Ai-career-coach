@@ -3,12 +3,14 @@ import axios from 'axios'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Report from './_components/Report'
+import { ArrowLeftCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const AiResumeAnalyzer = () => {
     const {recordid} = useParams()
     const [pdfUrl, setPdfUrl] = useState();
     const [aiReport, setAiReport] = useState();
-
+  const router = useRouter();
     useEffect(() => {
         recordid && GetResumeAnalyzerRecord()
     },[recordid])
@@ -20,7 +22,9 @@ const AiResumeAnalyzer = () => {
         setAiReport(result.data?.content)
     }
   return (
+    
     <div className='grid lg:grid-cols-5 grid-cols-1 h-[83vh]'> 
+   
         <div className='col-span-2 overflow-y-auto border-r h-full'>
         <Report aiReport={aiReport}/>
         </div>
@@ -37,6 +41,7 @@ const AiResumeAnalyzer = () => {
             }}           />
         </div>
     </div>
+
   )
 }
 

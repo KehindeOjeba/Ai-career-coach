@@ -1,6 +1,6 @@
 import { UserProfile } from '@clerk/nextjs'
 import React from 'react'
-import WelcomeBanner from '../dashboard/_components/WelcomeBanner'
+import WelcomeBanner from '../../dashboard/_components/WelcomeBanner'
 
 const Profile = () => {
   return (

@@ -16,6 +16,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Logo from '@/public/herologo.png'
 
+
 const items = [
     {
         title: "Dashboard",
@@ -32,13 +33,13 @@ const items = [
         url: "/my-history",
         icon: History,
     },
+    // {
+    //     title: "Billing",
+    //     url: "/billing",
+    //     icon: Wallet,
+    // },
     {
-        title: "Billing",
-        url: "/billing",
-        icon: Wallet,
-    },
-    {
-        title: "Profile",
+        title: "My Profile",
         url: "/profile",
         icon: UserCircle,
     },

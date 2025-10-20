@@ -38,11 +38,11 @@ const items = [
     //     url: "/billing",
     //     icon: Wallet,
     // },
-    {
-        title: "My Profile",
-        url: "/profile",
-        icon: UserCircle,
-    },
+    // {
+    //     title: "My Profile",
+    //     url: "/profile",
+    //     icon: UserCircle,
+    // },
 ]
 
 export function AppSidebar() {

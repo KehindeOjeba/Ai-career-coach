@@ -1,6 +1,5 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { useUser } from '@clerk/nextjs';
 import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link'
@@ -22,7 +21,6 @@ type AIToolProps = {
     tool: TOOL
 }
 const AiToolCard = ({tool}: AIToolProps) => {
-  const {user} = useUser();
   const id = uuidv4();
 const router = useRouter()
 const [openResumeUpload, setOpenResumeUpload] = useState(false);

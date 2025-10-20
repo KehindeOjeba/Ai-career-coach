@@ -36,16 +36,16 @@ const onUploadAndAnalyze = async () => {
  formData.append('resumeFile', file);
  //route to billing
  //@ts-ignore
-const hasSubsriptionEnabled = await has({ plan: 'pro'})
-if(!hasSubsriptionEnabled) {
-   const resultHistory = await axios.get('/api/history');
-   const historyList = resultHistory.data;
-   const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-resume-analyzer')
-   router.push('/billing')
-   if (isPresent) {
-    return null
-   }
-}
+// const hasSubsriptionEnabled = await has({ plan: 'pro'})
+// if(!hasSubsriptionEnabled) {
+//    const resultHistory = await axios.get('/api/history');
+//    const historyList = resultHistory.data;
+//    const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-resume-analyzer')
+//    router.push('/billing')
+//    if (isPresent) {
+//     return null
+//    }
+// }
 
 //Send FormData to backend server
 const result = await axios.post('/api/ai-resume-agent', formData)
@@ -64,7 +64,7 @@ setOpenResumeModal(false);
         <label htmlFor='resumeUpload' className='flex items-center flex-col justify-center p-7 border border-dashed rounded-xl hover:bg-slate-100 cursor-pointer'> 
             <File className='h-10 w-10'/>
             {file ? <h2 className='mt-3 text-blue-300'>{file?.name}</h2>:
-            <h2 className='mt-3'> Click here to Upload PDF file</h2>} 
+            <strong className='mt-3'> Click here to Upload PDF file</strong>} 
             </label>
             <input type='file' id='resumeUpload' className='hidden' accept='application/pdf' onChange={onFileChange}/>
        </div>

@@ -1,16 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LoaderCircle, Send } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import EmptyState from "../_components/EmptyState";
+import { LoaderCircle, Send, ArrowLeftCircle } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import ReactMarkdown from 'react-markdown'
-import { useParams } from "next/navigation";
-import { useRouter } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
+import ReactMarkdown from "react-markdown";
+import { useParams, useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
-type messages = {
+type Message = {
   content: string;
   role: string;
   type: string;
@@ -19,120 +17,156 @@ type messages = {
 const AiChat = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [messageList, setMessageList] = useState<messages[]>([]);
-  const {chatid} = useParams();
-  
-  const router = useRouter()
-  console.log(chatid);
+  const [messageList, setMessageList] = useState<Message[]>([]);
+  const { chatid } = useParams();
+  const router = useRouter();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
-useEffect(() => {
-  chatid && GetMessageList()
-},[chatid])
+  useEffect(() => {
+    chatid && GetMessageList();
+  }, [chatid]);
 
-const GetMessageList = async() => {
-  const result = await axios.get('/api/history?recordId=' + chatid)
-  console.log(result.data);
-  setMessageList(result?.data?.content)
-}
+  const GetMessageList = async () => {
+    const result = await axios.get("/api/history?recordId=" + chatid);
+    setMessageList(result?.data?.content || []);
+  };
 
   const onSend = async () => {
+    if (!userInput.trim()) return;
     setLoading(true);
     setMessageList((prev) => [
       ...prev,
-      {
-        content: userInput,
-        role: "user",
-        type: "text",
-      },
+      { content: userInput, role: "user", type: "text" },
     ]);
-    setUserInput('')
+    const input = userInput;
+    setUserInput("");
+
     const result = await axios.post("/api/ai-career-chat-agent", {
-      userInput: userInput,
+      userInput: input,
     });
-    console.log(result.data, "resultttt");
+
     setMessageList((prev) => [...prev, result?.data]);
     setLoading(false);
   };
 
   useEffect(() => {
- messageList.length > 0 && updateMessageList()
-  }, [messageList])
+    if (messageList.length > 0) updateMessageList();
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageList]);
 
   const updateMessageList = async () => {
-    const result = await axios.put('/api/history', {
+    await axios.put("/api/history", {
       content: messageList,
-      recordId: chatid
+      recordId: chatid,
     });
-    console.log(result);
-  }
+  };
 
-  const onNewChat = async() => {
+  const onNewChat = async () => {
     const id = uuidv4();
-//Create New record to History Table in the db
-const result = await axios.post('/api/history',{
-  recordId: id,
-  content: []
-});
-console.log(result);
-router.replace('/ai-tools/ai-chat/'+id)
-}
+    await axios.post("/api/history", { recordId: id, content: [] });
+    router.replace("/ai-tools/ai-chat/" + id);
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      onSend();
+    }
+  };
+
   return (
-    <div className="px-10 md:px-24 lg:px-36 xl:px-48 h-[75vh] overflow-auto">
-      <div className="flex items-center justify-between gap-6">
-        <div>
-          <h2 className="font-bold text-lg">AI Career Q/A Chat</h2>
-          <p>Smarter career decisions start here — get tailored advice</p>
+    <div className="flex flex-col h-[85vh] overflow-auto bg-white">
+      {/* Header */}
+      <div onClick={router.back} className="cursor-pointer"> <ArrowLeftCircle/></div>
+      <header className="flex items-center justify-between md:px-12 p-0 mb-3 ">
+        <div className="flex items-center gap-3">
+          <h2 className="font-semibold text-lg text-gray-800">
+            AI Career Q/A Chat
+          </h2>
         </div>
-        <Button onClick={onNewChat}>+ New Chat</Button>
-      </div>
-      <div className="flex flex-col h-[70vh]">
+        <Button
+          onClick={onNewChat}
+          className="text-sm font-medium bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-full"
+        >
+          + New Chat
+        </Button>
+      </header>
+
+      {/* Main chat container */}
+      <main className="flex-1 flex flex-col px-4 md:px-24 lg:px-36 xl:px-48 py-6 overflow-y-auto">
         {messageList?.length <= 0 && (
-          <div className="mt-5">
-            {/* Empty state options */}
-            <EmptyState
-              selectedQuestion={(question: string) => setUserInput(question)}
-            />
+          <div className="text-center text-gray-400 mt-10 text-sm">
+            Start a conversation — ask about roles, interviews, or growth paths.
           </div>
         )}
-        <div className="flex-1">
-          {/* Message List */}
-          {messageList?.map((message, index) => (
-            <div  key={index}>
+
+        {messageList?.map((message, index) => (
+          <div key={index}>
+            <div
+              className={`flex mb-2 ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-               
-                className={` flex mb-2 ${
-                  message.role == "user" ? "justify-end" : "justify-start"
+                className={`p-3 rounded-lg max-w-[85%] md:max-w-[70%] ${
+                  message.role === "user"
+                    ? "bg-indigo-100 text-gray-900"
+                    : "bg-gray-50 text-gray-900"
                 }`}
               >
-                <div
-                  className={`p-3 rounded-lg gap-2 ${
-                    message.role == "user"
-                      ? "bg-gray-200 text-black rounded-lg"
-                      : "bg-gray-50 text-black"
-                  }`}
-                >
-                  <ReactMarkdown>
-                  {message.content}
-                  </ReactMarkdown>
-                </div>
+                <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
-              {loading && messageList?.length - 1 == index && (
-                <div className="flex justify-start  p-3 rounded-lg gap-2 bg-gray-50">
-                  <LoaderCircle className="animate-spin" /> Thinking...
-                </div>
-              )}
             </div>
-          ))}
-        </div>
-        <div className="flex justify-between items-center gap-6 absolute bottom-5 w-[60%] ">
-          {/* Input field */}
+
+            {loading && messageList.length - 1 === index && (
+              <div className="flex justify-start p-3 rounded-lg gap-2 bg-gray-50 text-gray-600 text-sm">
+                <LoaderCircle className="animate-spin" /> Thinking...
+              </div>
+            )}
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </main>
+
+      {/* Unified responsive input */}
+      <div
+        className="
+            fixed bottom-4 left-4 right-4
+    md:sticky md:bottom-0 md:left-0 md:right-0 md:mx-auto md:max-w-3xl
+    md:mb-0
+        "
+      >
+        <div
+          className="
+            flex items-center gap-3
+            w-full
+            bg-white
+            border border-gray-200
+            rounded-full
+            shadow-sm
+            px-3 py-2
+            md:px-4 md:py-3
+          "
+        >
           <Input
-            placeholder="Type here"
+            placeholder="Ask anything about your career..."
             value={userInput}
-            onChange={(event) => setUserInput(event.target.value)}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={loading}
+            className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm md:text-base placeholder-gray-400 text-gray-800 w-[300px]"
           />
-          <Button onClick={onSend} disabled={loading}>
-            <Send />
+
+          <Button
+            onClick={onSend}
+            disabled={loading}
+            className="rounded-full bg-indigo-600 hover:bg-indigo-700 text-white p-2 w-10 h-10 flex items-center justify-center"
+          >
+            {loading ? (
+              <LoaderCircle className="h-5 w-5 animate-spin" />
+            ) : (
+              <Send className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>

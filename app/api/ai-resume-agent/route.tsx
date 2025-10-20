@@ -2,53 +2,70 @@ import { NextRequest, NextResponse } from "next/server";
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { inngest } from "@/inngest/client";
 import axios from "axios";
-import { currentUser } from "@clerk/nextjs/server";
+
+// ✅ FIXED version without Clerk
 export async function POST(request: NextRequest) {
-  const FormData = await request.formData();
-  const resumeFile: any = FormData.get("resumeFile");
-  const recordId = FormData.get("recordId");
- const user = await currentUser()
-  const loader = new WebPDFLoader(resumeFile);
-  const docs = await loader.load();
-  console.log(docs[0]); //Raw Pdf text
+  try {
+    const formData = await request.formData();
+    const resumeFile: any = formData.get("resumeFile");
+    const recordId = formData.get("recordId");
 
-  const arrayBuffer = await resumeFile.arrayBuffer();
-  const base64 = Buffer.from(arrayBuffer).toString("base64");
+    // ✅ Try to get email dynamically
+    // Option 1: Email passed from frontend form
+    let userEmail = formData.get("userEmail") as string | null;
 
-  const resultIds = await inngest.send({
-    name: "AiResumeAgent",
-    data: {
-      recordId: recordId,
-      //resumeFile: resumeFile,
-      base64ResumeFile: base64,
-      pdfText: docs[0]?.pageContent,
-      aiAgentType: '/ai-tools/ai-resume-analyzer',
-      userEmail: user?.primaryEmailAddress?.emailAddress
-    },
-  });
-  const runId = resultIds?.ids[0];
-  console.log("run", runId);
+    // Option 2: If not in form, check cookies (if you later store it there)
+    if (!userEmail) {
+      const cookieHeader = request.headers.get("cookie");
+      const emailMatch = cookieHeader?.match(/user_email=([^;]+)/);
+      if (emailMatch) userEmail = decodeURIComponent(emailMatch[1]);
+    }
 
-  let runStatus;
-  while (true) {
-    runStatus = await getRuns(runId);
-    if (runStatus?.data[0]?.status === "Completed") break;
+    // Option 3: Default fallback (for anonymous users)
+    if (!userEmail) userEmail = "anonymous@guest.com";
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-  }
-const run = runStatus?.data?.[0];
+    // ✅ Load PDF and convert to Base64
+    const loader = new WebPDFLoader(resumeFile);
+    const docs = await loader.load();
+    const arrayBuffer = await resumeFile.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString("base64");
 
-if (!run || run.status !== "Completed" || run.output === undefined) {
+    // ✅ Send to Inngest
+    const resultIds = await inngest.send({
+      name: "AiResumeAgent",
+      data: {
+        recordId,
+        base64ResumeFile: base64,
+        pdfText: docs[0]?.pageContent,
+        aiAgentType: "/ai-tools/ai-resume-analyzer",
+        userEmail, // 👈 fixed and dynamic
+      },
+    });
+
+    const runId = resultIds?.ids[0];
+    let runStatus;
+
+    while (true) {
+      runStatus = await getRuns(runId);
+      if (runStatus?.data[0]?.status === "Completed") break;
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+
+    const run = runStatus?.data?.[0];
+
+   if (!run || run.status !== "Completed" || !run.output) {
   return NextResponse.json({ error: "No output returned from agent" }, { status: 500 });
 }
 
-return NextResponse.json(run.output);
 
-
-
+    return NextResponse.json(run.output);
+  } catch (error) {
+    console.error("Resume upload error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
 
- async function getRuns(runId: string) {
+async function getRuns(runId: string) {
   const result = await axios.get(
     `${process.env.INNGEST_SERVER_HOST}/v1/events/${runId}/runs`,
     {
@@ -59,7 +76,6 @@ return NextResponse.json(run.output);
   );
   return result.data;
 }
-console.log("get", getRuns);
 
 
 //chatgpt
@@ -68,7 +84,7 @@ console.log("get", getRuns);
 // import { Buffer } from "buffer";
 // import { inngest } from "@/inngest/client";
 // import axios from "axios";
-// import { currentUser } from "@clerk/nextjs/server";
+
 
 // export async function POST(request: NextRequest) {
 //   try {

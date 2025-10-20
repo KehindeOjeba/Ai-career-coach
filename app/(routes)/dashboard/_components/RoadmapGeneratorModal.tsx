@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { Loader2Icon, SparkleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,7 +22,6 @@ const RoadmapGeneratorModal = ({
   const [userInput, setUserInput] = useState<string>();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {has} = useAuth();
 
   const GenerateRoadmap = async () => {
     const roadmapId = v4();

@@ -10,7 +10,6 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.20.0",
     "@inngest/agent-kit": "^0.8.3",
     "@langchain/community": "^0.3.49",
     "@langchain/core": "^0.3.66",

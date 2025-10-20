@@ -1,51 +1,68 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/configs/db";
 import { HistoryTable } from "@/configs/schema";
 import { NextResponse } from "next/server";
 import { desc, eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
-  const { content, recordId, aiAgentType } = await req.json();
-  const user = await currentUser();
-
   try {
-    if (!user?.primaryEmailAddress?.emailAddress) {
-      return NextResponse.json({ error: "User email not found" }, { status: 400 });
-    }
+    const body = await req.json();
+    const { content, recordId, aiAgentType, userEmail } = body;
 
+    // ✅ Safe defaults
+    const safeRecordId = recordId || crypto.randomUUID();
+    const safeAgent = aiAgentType || "unknown";
+    const safeEmail = userEmail || "guest@unknown.com";
+
+    // ✅ Handle content safely (convert array/object to JSON string if needed)
+    const safeContent =
+      typeof content === "string"
+        ? content
+        : JSON.stringify(content ?? []);
+
+    // ✅ Insert record
     const result = await db.insert(HistoryTable).values({
-      recordId,
-      content,
-      userEmail: user.primaryEmailAddress.emailAddress,
+      recordId: safeRecordId,
+      content: safeContent,
+      userEmail: safeEmail,
       createdAt: new Date().toISOString(),
-      aiAgentType,
+      aiAgentType: safeAgent,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({ success: true, result });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    console.error("❌ Error in POST /api/history:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
 export async function PUT(req: Request) {
-  const { content, recordId } = await req.json();
-
   try {
+    const { content, recordId } = await req.json();
+    const safeContent =
+      typeof content === "string" ? content : JSON.stringify(content ?? []);
+
     const result = await db
       .update(HistoryTable)
-      .set({ content })
+      .set({ content: safeContent })
       .where(eq(HistoryTable.recordId, recordId));
 
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    console.error("❌ Error in PUT /api/history:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const recordId = searchParams.get("recordId");
-  const user = await currentUser();
+  const userEmail = searchParams.get("userEmail") || "guest@unknown.com";
 
   try {
     if (recordId) {
@@ -56,83 +73,18 @@ export async function GET(request: Request) {
       return NextResponse.json(result[0] || {});
     }
 
-    if (!user?.primaryEmailAddress?.emailAddress) {
-      return NextResponse.json({ error: "User email not found" }, { status: 400 });
-    }
-
     const result = await db
       .select()
       .from(HistoryTable)
-      .where(eq(HistoryTable.userEmail, user.primaryEmailAddress.emailAddress))
+      .where(eq(HistoryTable.userEmail, userEmail))
       .orderBy(desc(HistoryTable.id));
 
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    console.error("❌ Error in GET /api/history:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
-
-
-// import { currentUser } from "@clerk/nextjs/server";
-// import { db } from "@/configs/db";
-// import { HistoryTable } from "@/configs/schema";
-// import { NextResponse } from "next/server";
-// import { desc, eq } from "drizzle-orm";
-// import { err } from "inngest/types";
-// export async function POST(req:any) {
-//    const {content, recordId, aiAgentType} = await req.json();
-//    const user = await currentUser();
-//    try{
-//     //insert record
-//     const result = await db.insert(HistoryTable).values({
-//         recordId: recordId,
-//         content: content,
-//         userEmail: user?.primaryEmailAddress?.emailAddress,
-//         createdAt: (new Date()).toString(),
-//         aiAgentType: aiAgentType
-//     });
-//     return NextResponse.json(result)
-//    } catch(error){
-//         return NextResponse.json(error)
-//    }
-// }
-
-// export async function PUT(req:any) {
-//     const { content, recordId} = await req.json();
-//     try{ 
-//         //Insert record
-//         const result = await db.update(HistoryTable).set({
-//             content: content,
-//         }).where(eq(HistoryTable.recordId, recordId))
-//         return NextResponse.json(result)
-//     }
-//     catch (error){
-// NextResponse.json(error)
-//     }
-    
-// }
-
-// export async function GET(request:any) {
-  
-//     const { searchParams } = new URL(request.url);
-//     const recordId = searchParams.get('recordId');
-//       const user = await currentUser();
-
-//    try {
-//     if (recordId) {
-//         const result = await db.select().from(HistoryTable).where(eq(HistoryTable.recordId, recordId));
-//       return NextResponse.json(result[0])  
-//     }
-//     else{
-//            const result = await db.select().from(HistoryTable).where(eq(HistoryTable.userEmail, user?.primaryEmailAddress?.emailAddress))
-//            .orderBy(desc(HistoryTable.id))
-//       return NextResponse.json(result)  
-//     }
-//        return NextResponse.json({})
-//     }
-
-   
-//    catch(error){
-//     return NextResponse.json(error)
-//    }
-// }

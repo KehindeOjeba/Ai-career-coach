@@ -13,12 +13,12 @@ import { Button } from '@/components/ui/button';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+
 const ResumeUploadModal = ({openResumeUpload, setOpenResumeModal}: any) => {
     const [file, setFile] = useState<any>();
     const [loading, setLoading] = useState(false)
     const router = useRouter();
-    const { has } = useAuth()
+    // const { has } = useAuth()
 
 const onFileChange = (event:any) => {
     const file = event.target.files?.[0];
@@ -28,32 +28,64 @@ const onFileChange = (event:any) => {
     }
 }
 
-const onUploadAndAnalyze = async () => {
-     setLoading(true)
- const recordId =uuidv4();
- const formData = new FormData();
- formData.append('recordId', recordId);
- formData.append('resumeFile', file);
- //route to billing
- //@ts-ignore
-// const hasSubsriptionEnabled = await has({ plan: 'pro'})
-// if(!hasSubsriptionEnabled) {
-//    const resultHistory = await axios.get('/api/history');
-//    const historyList = resultHistory.data;
-//    const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-resume-analyzer')
-//    router.push('/billing')
-//    if (isPresent) {
-//     return null
-//    }
-// }
+// const onUploadAndAnalyze = async () => {
+//      setLoading(true)
+//  const recordId =uuidv4();
+//  const formData = new FormData();
+//  formData.append('recordId', recordId);
+//  formData.append('resumeFile', file);
+//  //route to billing
+//  //@ts-ignore
+// // const hasSubsriptionEnabled = await has({ plan: 'pro'})
+// // if(!hasSubsriptionEnabled) {
+// //    const resultHistory = await axios.get('/api/history');
+// //    const historyList = resultHistory.data;
+// //    const isPresent = await historyList.find((item: any) => item?.aiAgentType == '/ai-tools/ai-resume-analyzer')
+// //    router.push('/billing')
+// //    if (isPresent) {
+// //     return null
+// //    }
+// // }
 
-//Send FormData to backend server
-const result = await axios.post('/api/ai-resume-agent', formData)
-console.log(result.data)
-setLoading(false)
-router.push('/ai-tools/ai-resume-analyzer/'+recordId)
-setOpenResumeModal(false);
-}
+// //Send FormData to backend server
+// const result = await axios.post('/api/ai-resume-agent', formData)
+// console.log(result.data)
+// setLoading(false)
+// router.push('/ai-tools/ai-resume-analyzer/'+recordId)
+// setOpenResumeModal(false);
+// }
+const onUploadAndAnalyze = async () => {
+  try {
+    setLoading(true);
+    const recordId = uuidv4();
+    const formData = new FormData();
+    formData.append("recordId", recordId);
+    formData.append("resumeFile", file);
+
+    const result = await axios.post("/api/ai-resume-agent", formData);
+    console.log("AI Resume Result:", result.data);
+
+    const userEmail = localStorage.getItem("userEmail") || "guest@unknown.com";
+
+    await axios.post("/api/history", {
+      recordId,
+      content: result.data.content,
+      aiAgentType: "/ai-tools/ai-resume-analyzer",
+      userEmail,
+      metaData: result.data.fileUrl,
+    });
+
+    router.push(`/ai-tools/ai-resume-analyzer/${recordId}`);
+    setOpenResumeModal(false);
+  } catch (error) {
+    console.error("Error analyzing resume:", error);
+    alert("Failed to upload or analyze your resume. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
     return (
    <Dialog open={openResumeUpload} onOpenChange={setOpenResumeModal}>
   <DialogContent>

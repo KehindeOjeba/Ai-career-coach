@@ -212,24 +212,7 @@ const Report = ({ aiReport }: any) => {
         </div>
       </div>
 
-      <div className="bg-blue-600 text-white rounded-lg shadow-md p-6 mb-6 text-center gradient-button-bg">
-        <h3 className="text-2xl font-bold mb-3">
-          Ready to refine your resume? 💪
-        </h3>
-
-        <p className="text-base mb-4">
-          Make your application stand out with our premium insights and
-          features.
-        </p>
-
-        <button
-          type="button"
-          className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-blue-600 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
-        >
-          Upgrade to Premium{" "}
-          <i className="fas fa-arrow-right ml-2 text-blue-600"></i>
-        </button>
-      </div>
+      
       <ResumeUploadModal  openResumeUpload={openResumeUpload} setOpenResumeModal={() => setOpenResumeModal(false)}/>
     </div>
   );

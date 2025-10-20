@@ -18,9 +18,24 @@ const AiChat = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const [userEmail, setUserEmail] = useState<string>(""); // 👈 added
   const { chatid } = useParams();
   const router = useRouter();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Prompt user for their email once (optional approach)
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("userEmail");
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    } else {
+      const email = prompt("Please enter your email to continue:");
+      if (email) {
+        localStorage.setItem("userEmail", email);
+        setUserEmail(email);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     chatid && GetMessageList();
@@ -32,7 +47,7 @@ const AiChat = () => {
   };
 
   const onSend = async () => {
-    if (!userInput.trim()) return;
+    if (!userInput.trim() || !userEmail) return;
     setLoading(true);
     setMessageList((prev) => [
       ...prev,
@@ -41,12 +56,22 @@ const AiChat = () => {
     const input = userInput;
     setUserInput("");
 
-    const result = await axios.post("/api/ai-career-chat-agent", {
-      userInput: input,
-    });
+    try {
+      const result = await axios.post("/api/ai-career-chat-agent", {
+        userInput: input,
+        userEmail, // 👈 send user email to backend
+      });
 
-    setMessageList((prev) => [...prev, result?.data]);
-    setLoading(false);
+      setMessageList((prev) => [...prev, result?.data]);
+    } catch (error) {
+      console.error(error);
+      setMessageList((prev) => [
+        ...prev,
+        { content: "Something went wrong. Please try again.", role: "system", type: "error" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -58,12 +83,13 @@ const AiChat = () => {
     await axios.put("/api/history", {
       content: messageList,
       recordId: chatid,
+      userEmail, // 👈 also include user email if your backend saves per user
     });
   };
 
   const onNewChat = async () => {
     const id = uuidv4();
-    await axios.post("/api/history", { recordId: id, content: [] });
+    await axios.post("/api/history", { recordId: id, content: [], userEmail });
     router.replace("/ai-tools/ai-chat/" + id);
   };
 
@@ -76,8 +102,10 @@ const AiChat = () => {
 
   return (
     <div className="flex flex-col h-[85vh] overflow-auto bg-white">
-      {/* Header */}
-      <div onClick={router.back} className="cursor-pointer"> <ArrowLeftCircle/></div>
+      <div onClick={router.back} className="cursor-pointer">
+        <ArrowLeftCircle />
+      </div>
+
       <header className="flex items-center justify-between md:px-12 p-0 mb-3 ">
         <div className="flex items-center gap-3">
           <h2 className="font-semibold text-lg text-gray-800">
@@ -92,7 +120,6 @@ const AiChat = () => {
         </Button>
       </header>
 
-      {/* Main chat container */}
       <main className="flex-1 flex flex-col px-4 md:px-24 lg:px-36 xl:px-48 py-6 overflow-y-auto">
         {messageList?.length <= 0 && (
           <div className="text-center text-gray-400 mt-10 text-sm">
@@ -128,25 +155,15 @@ const AiChat = () => {
         <div ref={bottomRef} />
       </main>
 
-      {/* Unified responsive input */}
       <div
-        className="
-            fixed bottom-4 left-4 right-4
-    md:sticky md:bottom-0 md:left-0 md:right-0 md:mx-auto md:max-w-3xl
-    md:mb-0
-        "
+        className="fixed bottom-4 left-4 right-4
+          md:sticky md:bottom-0 md:left-0 md:right-0 md:mx-auto md:max-w-3xl md:mb-0"
       >
         <div
-          className="
-            flex items-center gap-3
-            w-full
-            bg-white
-            border border-gray-200
-            rounded-full
-            shadow-sm
-            px-3 py-2
-            md:px-4 md:py-3
-          "
+          className="flex items-center gap-3
+            w-full bg-white border border-gray-200
+            rounded-full shadow-sm px-3 py-2
+            md:px-4 md:py-3"
         >
           <Input
             placeholder="Ask anything about your career..."

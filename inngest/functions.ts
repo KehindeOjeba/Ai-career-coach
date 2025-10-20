@@ -255,14 +255,54 @@ var imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_ENDPOINT_URL,
 });
 
+// export const AiResumeAgent = inngest.createFunction(
+//   { id: "AiResumeAgent" },
+//   { event: "AiResumeAgent" },
+//   async ({ event, step }) => {
+//     const { recordId, base64ResumeFile, pdfText, aiAgentType, userEmail } =
+//       await event.data;
+
+//     //Upload file to Cloud
+//     const uploadImageUrlToCloud = await step.run("uploadImage", async () => {
+//       const imageKitFile = await imagekit.upload({
+//         file: base64ResumeFile,
+//         fileName: `${Date.now()}.pdf`,
+//         isPublished: true,
+//       });
+//       return imageKitFile.url;
+//     });
+//     const aiResumeReport = await AiResumeAnalyzerAgent.run(pdfText);
+//     //@ts-ignore
+//     const rawContent = aiResumeReport.output[0]?.content;
+//     const rawContentJson = rawContent.replace("```json", "").replace("```", "");
+//     const parseJson = JSON.parse(rawContentJson);
+//     // return parseJson
+
+//     //Save to Data Base
+
+//     const saveToDb = await step.run("SaveToDb", async () => {
+//       const result = await db.insert(HistoryTable).values({
+//         recordId: recordId,
+//         content: parseJson,
+//         aiAgentType: aiAgentType,
+//         createdAt: new Date().toString(),
+//         userEmail: userEmail,
+//         metaData: uploadImageUrlToCloud,
+//       });
+//       console.log(result);
+//       return parseJson;
+//     });
+//   }
+// );
+
+
 export const AiResumeAgent = inngest.createFunction(
   { id: "AiResumeAgent" },
   { event: "AiResumeAgent" },
   async ({ event, step }) => {
-    const { recordId, base64ResumeFile, pdfText, aiAgentType, userEmail } =
-      await event.data;
+    const { recordId, base64ResumeFile, pdfText, aiAgentType, userEmail } = await event.data;
 
-    //Upload file to Cloud
+    // 1️⃣ Upload resume PDF to ImageKit
     const uploadImageUrlToCloud = await step.run("uploadImage", async () => {
       const imageKitFile = await imagekit.upload({
         file: base64ResumeFile,
@@ -271,29 +311,39 @@ export const AiResumeAgent = inngest.createFunction(
       });
       return imageKitFile.url;
     });
+
+    // 2️⃣ Run AI analysis
     const aiResumeReport = await AiResumeAnalyzerAgent.run(pdfText);
     //@ts-ignore
     const rawContent = aiResumeReport.output[0]?.content;
-    const rawContentJson = rawContent.replace("```json", "").replace("```", "");
-    const parseJson = JSON.parse(rawContentJson);
-    // return parseJson
 
-    //Save to Data Base
+    // 3️⃣ Safely parse JSON
+    const cleaned = rawContent
+      ?.replace(/^```json/, "")
+      ?.replace(/```$/, "")
+      ?.trim();
+    const parsedJson = JSON.parse(cleaned);
 
-    const saveToDb = await step.run("SaveToDb", async () => {
-      const result = await db.insert(HistoryTable).values({
-        recordId: recordId,
-        content: parseJson,
-        aiAgentType: aiAgentType,
-        createdAt: new Date().toString(),
-        userEmail: userEmail,
+    // 4️⃣ Save result to DB
+    await step.run("SaveToDb", async () => {
+      await db.insert(HistoryTable).values({
+        recordId,
+        content: parsedJson,
+        aiAgentType,
+        createdAt: new Date().toISOString(),
+        userEmail,
         metaData: uploadImageUrlToCloud,
       });
-      console.log(result);
-      return parseJson;
     });
+
+    // 5️⃣ Return simple JSON
+    return {
+      content: parsedJson,
+      fileUrl: uploadImageUrlToCloud,
+    };
   }
 );
+
 
 export const AiRoadmapAgent = inngest.createFunction(
   { id: "AiRoadmapAgent" },

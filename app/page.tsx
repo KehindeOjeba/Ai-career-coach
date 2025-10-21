@@ -3,6 +3,7 @@ import Logo from "../public/logo1.png";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { PenTool, LucidePenTool } from "lucide-react";
 
 export default function Home() {
   // We'll collect the user's email manually
@@ -78,7 +79,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Start A Free Trial
+            Explore Tools
           </motion.a>
         </div>
       </section>
